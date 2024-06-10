@@ -1,0 +1,49 @@
+name: CD for Prod
+
+on:
+    workflow_dispatch:
+        inputs:
+            test:
+                description: '🔦 QA lead already approved'
+                required: true
+                type: boolean
+            sign-off:
+                description: '📝 Make sure PO sign-off'
+                required: true
+                type: boolean
+            deploy-tag:
+                description: '🎯 Deploy Docker tag'
+                required: true
+                type: string
+                default: c9f6b38c1acd0a7153e42a03b577757262075eb3
+            deploy-message:
+                description: '🚀 Deploy message'
+                required: true
+                type: string
+                default: I'm inevitable
+jobs:
+    gitops-prd-versioning:
+        name: GitOps Prod Versioning
+        runs-on: ubuntu-latest
+        steps:
+            -   name: verify manual input
+                run: |
+                    { if [ '${{ inputs.test }}' = 'false' ]; then echo "🔦 QA lead not approve yet"; exit 1; fi }
+                    { if [ '${{ inputs.sign-off }}' = 'false' ]; then echo "📝 Need PO sign-off"; exit 1; fi }
+
+            -   name: checkout
+                uses: actions/checkout@v3
+
+            -   name: config git
+                run: |
+                    git --version
+                    git config user.name "robot"
+                    git config user.email "root@werockstar.dev"
+
+            -   name: change image tag
+                run: |
+                    sed -i -E "s/ghcr.io\/kkgo-software-engineering\/workshop-summer-group-4-b1.*$/ghcr.io\/kkgo-software-engineering\/workshop-summer-group-4-b1:${{ inputs.deploy-tag }}/" infra/gitops/prod/deployment.yaml
+                    git add infra/gitops/prod/deployment.yaml
+                    git commit -m "[skip actions] ship it to prod 🚀 with ${{ inputs.deploy-message }}"
+                    git pull --rebase
+                    git push

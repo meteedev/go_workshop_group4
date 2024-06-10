@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: group-4-b1-dev-deployment
+  namespace: group-4-b1-dev
+spec:
+  selector:
+    matchLabels:
+      app: api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: workshop-summer-group-4-b1
+          image: ghcr.io/kkgo-software-engineering/workshop-summer-group-4-b1:9f318fc55c6b4f5a6fd082652bef1c97354b7855
+          imagePullPolicy: Always
+          env:
+              -  name: DATABASE_POSTGRES_URI
+                 valueFrom:
+                     secretKeyRef:
+                         key: db.url
+                         name: secret
+              -  name: SERVER_PORT
+                 valueFrom:
+                     configMapKeyRef:
+                         name: app-config
+                         key: server.port
+              -  name: ENABLE_CREATE_SPENDER
+                 valueFrom:
+                     configMapKeyRef:
+                         name: app-config
+                         key: enable.create.spender
+              -  name: ENABLE_CREATE_TRANSACTION
+                 valueFrom:
+                     configMapKeyRef:
+                         name: app-config
+                         key: enable.create.transaction
+              -  name: ENABLE_UPDATE_TRANSACTION
+                 valueFrom:
+                     configMapKeyRef:
+                         name: app-config
+                         key: enable.update.transaction
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: 256Mi
+            requests:
+                cpu: "0.25"
+                memory: 128Mi

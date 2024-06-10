@@ -1,0 +1,22 @@
+# Infrastructure as Code
+- [EKS](eks/README.md) - Create EKS cluster, ArgoCD, nginx ingress controller and external-dns
+- [ArgoCD](argocd-app/README.md) - Create ArgoCD applications
+- [SonarQube](sonarqube/README.md) - Create SonarQube server and mapping DNS to SonarQube
+  - DNS `sonarqube`: `sonarqube.werockstar.dev`
+  - We're still create project in SonarQube manually
+- [Cloudflare](cloudflare/README.md) - Create Cloudflare DNS record for all group
+  - Dev
+    - `group-1-b1-dev`: `group-1-b1-dev.werockstar.dev`
+    - `group-2-b1-dev`: `group-2-b1-dev.werockstar.dev`
+    - `group-3-b1-dev`: `group-3-b1-dev.werockstar.dev`
+    - `group-4-b1-dev`: `group-4-b1-dev.werockstar.dev`
+    - `group-5-b1-dev`: `group-5-b1-dev.werockstar.dev`
+  - Prod
+    - `group-1-b1-prod`: `group-1-b1-prod.werockstar.dev`
+    - `group-2-b1-prod`: `group-2-b1-prod.werockstar.dev`
+    - `group-3-b1-prod`: `group-3-b1-prod.werockstar.dev`
+    - `group-4-b1-prod`: `group-4-b1-prod.werockstar.dev`
+    - `group-5-b1-prod`: `group-5-b1-prod.werockstar.dev`
+  - `group-0` is reserved for instructor
+    - `group-0-b1-dev`: `group-0-b1-dev.werockstar.dev`
+    - `group-0-b1-prod`: `group-0-b1-prod.werockstar.dev`

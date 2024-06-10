@@ -1,0 +1,6 @@
+infra
+.github
+*.md
+*.yaml
+*.png
+makefile
